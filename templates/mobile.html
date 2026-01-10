@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile & SMS Access - Market X</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c5f2d;
+            --secondary-color: #97bc62;
+            --accent-color: #ff6b35;
+            --text-dark: #2d3436;
+            --text-light: #636e72;
+            --bg-light: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+
+        /* Navigation */
+        .navbar-custom {
+            background: white;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .nav-link {
+            color: var(--text-dark);
+            font-weight: 500;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        /* Main Container */
+        .main-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            margin: 30px auto;
+            max-width: 1200px;
+            overflow: hidden;
+        }
+
+        /* Header Section */
+        .header-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Mobile Content */
+        .mobile-content {
+            padding: 40px;
+        }
+
+        /* Phone Mock Section */
+        .phone-mock-section {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
+
+        .phone-mock-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 50px;
+            flex-wrap: wrap;
+            margin-bottom: 50px;
+        }
+
+        .phone-mock {
+            background: #1a1a1a;
+            border-radius: 40px;
+            padding: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            width: 300px;
+            height: 600px;
+        }
+
+        .phone-screen {
+            background: white;
+            border-radius: 25px;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .phone-notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 25px;
+            background: #1a1a1a;
+            border-radius: 0 0 15px 15px;
+            z-index: 10;
+        }
+
+        .sms-interface {
+            padding: 40px 20px 20px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            background: #f0f0f0;
+        }
+
+        .sms-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 15px;
+            border-radius: 10px 10px 0 0;
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .sms-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .sms-message {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            animation: slideInUp 0.5s ease;
+        }
+
+        .sms-message.sent {
+            background: #e3f2fd;
+            margin-left: 20px;
+        }
+
+        .sms-message.received {
+            background: white;
+            margin-right: 20px;
+            border: 1px solid #e0e0e0;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .sms-input-area {
+            padding: 15px;
+            background: white;
+            border-radius: 0 0 10px 10px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .sms-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+            margin-left: 10px;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--text-light);
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+            }
+
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Instructions Section */
+        .instructions-section {
+            background: var(--bg-light);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .instructions-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+        }
+
+        .instruction-steps {
+            list-style: none;
+            padding: 0;
+        }
+
+        .instruction-step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-title {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+
+        .step-description {
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+
+        /* Voice Access Section */
+        .voice-section {
+            background: linear-gradient(135deg, var(--accent-color), #ff8f65);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .voice-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .voice-description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            opacity: 0.95;
+        }
+
+        .voice-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .voice-feature {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .voice-icon {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .voice-feature-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .voice-feature-description {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        /* Accessibility Features */
+        .accessibility-section {
+            margin-bottom: 40px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            border-color: var(--primary-color);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+        }
+
+        .feature-description {
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* Impact Section */
+        .impact-section {
+            background: var(--bg-light);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .impact-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .impact-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            text-align: center;
+        }
+
+        .impact-stat {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .impact-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .impact-label {
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        /* Demo Controls */
+        .demo-controls {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .btn-demo {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 10px;
+        }
+
+        .btn-demo:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(44, 95, 45, 0.3);
+        }
+
+        .btn-demo:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-container {
+                margin: 20px;
+                border-radius: 15px;
+            }
+
+            .header-section {
+                padding: 30px 20px;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .mobile-content {
+                padding: 20px;
+            }
+
+            .phone-mock-container {
+                gap: 30px;
+            }
+
+            .phone-mock {
+                width: 250px;
+                height: 500px;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .voice-features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-chart-line"></i> Market X
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/analysis">Analysis</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/alerts">Alerts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <div class="main-container">
+            <!-- Header Section -->
+            <div class="header-section">
+                <h1 class="page-title">Mobile & SMS Access</h1>
+                <p class="page-subtitle">Bringing market intelligence to every Ethiopian, regardless of device or
+                    literacy</p>
+            </div>
+
+            <!-- Mobile Content -->
+            <div class="mobile-content">
+                <!-- SMS Demo Section -->
+                <div class="phone-mock-section">
+                    <h2 class="section-title">SMS Market Intelligence</h2>
+                    <p class="section-subtitle">
+                        Simple text-based access for users without smartphones or internet connectivity
+                    </p>
+
+                    <!-- Demo Controls -->
+                    <div class="demo-controls">
+                        <button class="btn-demo" onclick="startSMSDemo()">
+                            <i class="fas fa-play"></i> Start SMS Demo
+                        </button>
+                        <button class="btn-demo" onclick="resetSMSDemo()">
+                            <i class="fas fa-redo"></i> Reset Demo
+                        </button>
+                    </div>
+
+                    <!-- Phone Mock -->
+                    <div class="phone-mock-container">
+                        <div class="phone-mock">
+                            <div class="phone-screen">
+                                <div class="phone-notch"></div>
+                                <div class="sms-interface">
+                                    <div class="sms-header">
+                                        <i class="fas fa-comments"></i> Market X
+                                    </div>
+                                    <div class="sms-messages" id="smsMessages">
+                                        <div class="sms-message received">
+                                            <strong>Market X:</strong><br>
+                                            Welcome! Send market info in format: PRODUCT MARKET QUANTITY<br>
+                                            <small>Example: TEFF ADDIS 50KG</small>
+                                        </div>
+                                    </div>
+                                    <div class="sms-input-area">
+                                        <input type="text" class="sms-input" id="smsInput"
+                                            placeholder="Type your message..." readonly>
+                                        <div class="typing-indicator" id="typingIndicator" style="display: none;">
+                                            <span>Market X is typing</span>
+                                            <div class="typing-dots">
+                                                <div class="typing-dot"></div>
+                                                <div class="typing-dot"></div>
+                                                <div class="typing-dot"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Instructions -->
+                        <div class="instructions-section">
+                            <h3 class="instructions-title">
+                                <i class="fas fa-info-circle"></i> How SMS Access Works
+                            </h3>
+                            <ul class="instruction-steps">
+                                <li class="instruction-step">
+                                    <div class="step-number">1</div>
+                                    <div class="step-content">
+                                        <div class="step-title">Send Market Query</div>
+                                        <div class="step-description">
+                                            Text your product, market, and quantity to our SMS number in a simple format
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="instruction-step">
+                                    <div class="step-number">2</div>
+                                    <div class="step-content">
+                                        <div class="step-title">AI Analysis</div>
+                                        <div class="step-description">
+                                            Our system analyzes your query using the same AI technology as the web
+                                            platform
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="instruction-step">
+                                    <div class="step-number">3</div>
+                                    <div class="step-content">
+                                        <div class="step-title">Receive Recommendations</div>
+                                        <div class="step-description">
+                                            Get instant market advice, price trends, and selling recommendations via SMS
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="instruction-step">
+                                    <div class="step-number">4</div>
+                                    <div class="step-content">
+                                        <div class="step-title">Take Action</div>
+                                        <div class="step-description">
+                                            Make informed decisions based on AI-powered market intelligence
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Voice Access Section -->
+                <div class="voice-section">
+                    <h2 class="voice-title">
+                        <i class="fas fa-microphone"></i> Voice Access for All
+                    </h2>
+                    <p class="voice-description">
+                        Planned voice interface for users with limited literacy, ensuring everyone can benefit from
+                        market intelligence regardless of reading ability.
+                    </p>
+
+                    <div class="voice-features">
+                        <div class="voice-feature">
+                            <div class="voice-icon">
+                                <i class="fas fa-phone-volume"></i>
+                            </div>
+                            <div class="voice-feature-title">Phone Call Access</div>
+                            <div class="voice-feature-description">
+                                Call our number and speak your market query naturally
+                            </div>
+                        </div>
+                        <div class="voice-feature">
+                            <div class="voice-icon">
+                                <i class="fas fa-language"></i>
+                            </div>
+                            <div class="voice-feature-title">Multiple Languages</div>
+                            <div class="voice-feature-description">
+                                Support for Amharic, Oromo, Tigrinya, and other local languages
+                            </div>
+                        </div>
+                        <div class="voice-feature">
+                            <div class="voice-icon">
+                                <i class="fas fa-volume-up"></i>
+                            </div>
+                            <div class="voice-feature-title">Audio Responses</div>
+                            <div class="voice-feature-description">
+                                Receive market advice through spoken responses
+                            </div>
+                        </div>
+                        <div class="voice-feature">
+                            <div class="voice-icon">
+                                <i class="fas fa-universal-access"></i>
+                            </div>
+                            <div class="voice-feature-title">Accessibility First</div>
+                            <div class="voice-feature-description">
+                                Designed specifically for users with accessibility needs
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Accessibility Features -->
+                <div class="accessibility-section">
+                    <h2 class="section-title">Inclusive by Design</h2>
+                    <p class="section-subtitle">
+                        Breaking down barriers to market information access across Ethiopia
+                    </p>
+
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <h3 class="feature-title">Basic Phone Support</h3>
+                            <p class="feature-description">
+                                Works on any mobile phone, no smartphone required. Access market intelligence from
+                                feature phones and basic mobile devices.
+                            </p>
+                        </div>
+
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-wifi-slash"></i>
+                            </div>
+                            <h3 class="feature-title">No Internet Needed</h3>
+                            <p class="feature-description">
+                                SMS and voice interfaces work without internet connectivity, reaching rural areas with
+                                limited infrastructure.
+                            </p>
+                        </div>
+
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <h3 class="feature-title">Literacy Friendly</h3>
+                            <p class="feature-description">
+                                Simple formats and voice access ensure users with limited literacy can still benefit
+                                from market insights.
+                            </p>
+                        </div>
+
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <h3 class="feature-title">Low Cost Access</h3>
+                            <p class="feature-description">
+                                Standard SMS rates apply, with plans for free access in partnership with mobile
+                                operators and NGOs.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Impact Section -->
+                <div class="impact-section">
+                    <h3 class="impact-title">Expected Impact & Reach</h3>
+                    <div class="impact-stats">
+                        <div class="impact-stat">
+                            <div class="impact-number">60M+</div>
+                            <div class="impact-label">Potential Users</div>
+                        </div>
+                        <div class="impact-stat">
+                            <div class="impact-number">85%</div>
+                            <div class="impact-label">Mobile Phone Access</div>
+                        </div>
+                        <div class="impact-stat">
+                            <div class="impact-number">40%</div>
+                            <div class="impact-label">Rural Population</div>
+                        </div>
+                        <div class="impact-stat">
+                            <div class="impact-number">5+</div>
+                            <div class="impact-label">Local Languages</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Call to Action -->
+                <div class="text-center mt-5">
+                    <h3>Join Us in Bridging the Digital Divide</h3>
+                    <p class="text-muted mb-4">
+                        Help us bring market intelligence to every Ethiopian, regardless of their access to technology
+                    </p>
+                    <div class="d-flex justify-content-center gap-3">
+                        <button class="btn-demo" onclick="learnMore()">
+                            <i class="fas fa-info-circle"></i> Learn More
+                        </button>
+                        <button class="btn-demo" onclick="partnerWithUs()">
+                            <i class="fas fa-handshake"></i> Partner With Us
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let demoInterval;
+        let messageIndex = 0;
+
+        const demoMessages = [
+            {
+                type: 'sent',
+                text: 'TEFF ADDIS 50KG',
+                delay: 1000
+            },
+            {
+                type: 'received',
+                text: 'Analyzing teff market in Addis Ababa for 50kg...',
+                delay: 2000
+            },
+            {
+                type: 'received',
+                text: '📊 Market Analysis:\n' +
+                    '• Best Market: Addis Ababa\n' +
+                    '• Recommendation: WAIT 3-5 days\n' +
+                    '• Expected Trend: RISING (+12-15%)\n' +
+                    '• Current Price: ~2,800 ETB/quintal\n' +
+                    '• Confidence: HIGH\n\n' +
+                    '💡 Reason: Holiday demand increasing next week',
+                delay: 3000
+            },
+            {
+                type: 'sent',
+                text: 'COFFEE JIMMA 100KG',
+                delay: 6000
+            },
+            {
+                type: 'received',
+                text: '📊 Coffee Market Update:\n' +
+                    '• Best Market: Jimma\n' +
+                    '• Recommendation: SELL NOW\n' +
+                    '• Expected Trend: STABLE\n' +
+                    '• Current Price: ~4,500 ETB/quintal\n' +
+                    '• Confidence: MEDIUM\n\n' +
+                    '💡 Reason: Good prices, stable market',
+                delay: 7000
+            }
+        ];
+
+        function startSMSDemo() {
+            resetSMSDemo();
+
+            const smsMessages = document.getElementById('smsMessages');
+            const smsInput = document.getElementById('smsInput');
+            const typingIndicator = document.getElementById('typingIndicator');
+
+            demoInterval = setInterval(() => {
+                if (messageIndex < demoMessages.length) {
+                    const message = demoMessages[messageIndex];
+
+                    if (message.type === 'sent') {
+                        // Show typing in input
+                        smsInput.value = '';
+                        smsInput.readOnly = false;
+
+                        // Simulate typing
+                        let charIndex = 0;
+                        const typingInterval = setInterval(() => {
+                            if (charIndex < message.text.length) {
+                                smsInput.value += message.text[charIndex];
+                                charIndex++;
+                            } else {
+                                clearInterval(typingInterval);
+
+                                // Add message to chat
+                                addMessage(message.text, 'sent');
+                                smsInput.value = '';
+                                smsInput.readOnly = true;
+                                messageIndex++;
+                            }
+                        }, 100);
+
+                    } else if (message.type === 'received') {
+                        // Show typing indicator
+                        typingIndicator.style.display = 'flex';
+
+                        setTimeout(() => {
+                            typingIndicator.style.display = 'none';
+                            addMessage(message.text, 'received');
+                            messageIndex++;
+                        }, 1500);
+                    }
+                } else {
+                    clearInterval(demoInterval);
+                    // Demo complete
+                    setTimeout(() => {
+                        addMessage('📱 Try: MAIZE MEKELLE 200KG', 'received');
+                    }, 2000);
+                }
+            }, 500);
+        }
+
+        function addMessage(text, type) {
+            const smsMessages = document.getElementById('smsMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `sms-message ${type}`;
+
+            if (type === 'received') {
+                messageDiv.innerHTML = `<strong>Market X:</strong><br>${text.replace(/\n/g, '<br>')}`;
+            } else {
+                messageDiv.innerHTML = text;
+            }
+
+            smsMessages.appendChild(messageDiv);
+            smsMessages.scrollTop = smsMessages.scrollHeight;
+        }
+
+        function resetSMSDemo() {
+            clearInterval(demoInterval);
+            messageIndex = 0;
+
+            const smsMessages = document.getElementById('smsMessages');
+            const smsInput = document.getElementById('smsInput');
+            const typingIndicator = document.getElementById('typingIndicator');
+
+            // Reset to initial state
+            smsMessages.innerHTML = `
+                <div class="sms-message received">
+                    <strong>Market X:</strong><br>
+                    Welcome! Send market info in format: PRODUCT MARKET QUANTITY<br>
+                    <small>Example: TEFF ADDIS 50KG</small>
+                </div>
+            `;
+
+            smsInput.value = '';
+            smsInput.readOnly = true;
+            typingIndicator.style.display = 'none';
+        }
+
+        function learnMore() {
+            alert('Learn more about our accessibility initiatives and plans for expanding access to market intelligence across Ethiopia.');
+        }
+
+        function partnerWithUs() {
+            alert('Partner with us to bring market intelligence to every Ethiopian. Contact: partnerships@marketx.com');
+        }
+
+        // Initialize
+        window.addEventListener('load', function () {
+            resetSMSDemo();
+        });
+    </script>
+</body>
+
+</html>

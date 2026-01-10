@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market X - Smart Market Decisions for Everyone</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c5f2d;
+            --secondary-color: #97bc62;
+            --accent-color: #ff6b35;
+            --text-dark: #2d3436;
+            --text-light: #636e72;
+            --bg-light: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #17a82d 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 20px;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 40px;
+            animation: fadeInUp 1s ease 0.2s;
+            animation-fill-mode: both;
+        }
+
+        .hero-buttons {
+            animation: fadeInUp 1s ease 0.4s;
+            animation-fill-mode: both;
+        }
+
+        .btn-hero-primary {
+            background: white;
+            color: var(--primary-color);
+            border: none;
+            border-radius: 50px;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-right: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-hero-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-hero-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+            border-radius: 50px;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-hero-secondary:hover {
+            background: white;
+            color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        /* Animated Background */
+        .hero-bg-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+        }
+
+        .floating-element {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            left: 10%;
+            top: 20%;
+            animation-delay: 0s;
+        }
+
+        .floating-element:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            right: 20%;
+            top: 60%;
+            animation-delay: 2s;
+        }
+
+        .floating-element:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            left: 70%;
+            bottom: 20%;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 100px 0;
+            background: var(--bg-light);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--text-light);
+            margin-bottom: 60px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            height: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: none;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            color: var(--accent-color);
+            transform: scale(1.1);
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+        }
+
+        .feature-description {
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* Trust Section */
+        .trust-section {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .trust-badge {
+            display: inline-flex;
+            align-items: center;
+            background: var(--bg-light);
+            padding: 15px 30px;
+            border-radius: 50px;
+            margin: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .trust-badge:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .trust-badge i {
+            margin-right: 10px;
+            color: var(--accent-color);
+        }
+
+        .trust-badge:hover i {
+            color: white;
+        }
+
+        .disclaimer {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            color: #856404;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--text-dark);
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-widget h5 {
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--secondary-color);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--secondary-color);
+            transform: translateY(-3px);
+        }
+
+        /* Navigation */
+        .navbar-custom {
+            background: transparent;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-custom.scrolled {
+            background: white;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-custom.scrolled .navbar-brand,
+        .navbar-custom.scrolled .nav-link {
+            color: var(--text-dark);
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: white;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .btn-hero-primary,
+            .btn-hero-secondary {
+                display: block;
+                width: 100%;
+                margin: 10px 0;
+            }
+
+            .feature-card {
+                margin-bottom: 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-chart-line"></i> Market X
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#trust">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/auth">Get Started</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-bg-animation">
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+        </div>
+        <div class="container">
+            <div class="row align-items-center min-vh-100">
+                <div class="col-lg-6 hero-content">
+                    <h1 class="hero-title">Smart Market Decisions for Everyone</h1>
+                    <p class="hero-subtitle">
+                        Predict prices, choose the best market, and make better decisions using AI-powered insights
+                        tailored for Ethiopia's agricultural ecosystem.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="/auth" class="btn btn-hero-primary">
+                            <i class="fas fa-rocket"></i> Get Started
+                        </a>
+                        <a href="#features" class="btn btn-hero-secondary">
+                            <i class="fas fa-info-circle"></i> Explore Features
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section" id="features">
+        <div class="container">
+            <h2 class="section-title">Powerful Features for Ethiopian Markets</h2>
+            <p class="section-subtitle">AI-driven insights to help you make smarter market decisions</p>
+
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3 class="feature-title">Price Forecasting</h3>
+                        <p class="feature-description">
+                            Get AI-powered predictions for market prices over the next 7 days, helping you time your
+                            decisions perfectly.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <h3 class="feature-title">Best Market Recommendation</h3>
+                        <p class="feature-description">
+                            Discover which market offers the best returns for your specific product and quantity across
+                            Ethiopia.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <h3 class="feature-title">Sell Now vs Wait Advice</h3>
+                        <p class="feature-description">
+                            Receive clear, actionable recommendations on whether to sell immediately or wait for better
+                            market conditions.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3 class="feature-title">Multi-User Support</h3>
+                        <p class="feature-description">
+                            Tailored insights for farmers, traders, businesses, and consumers with role-specific
+                            recommendations.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3 class="feature-title">AI-Powered Insights</h3>
+                        <p class="feature-description">
+                            Powered by Google Gemini AI to analyze market patterns and provide intelligent,
+                            context-aware recommendations.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3 class="feature-title">Mobile Accessible</h3>
+                        <p class="feature-description">
+                            Works on all devices with plans for SMS and voice access to reach users without smartphones.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Section -->
+    <section class="trust-section" id="trust">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">Built with Trust & Transparency</h2>
+                <p class="section-subtitle">Reliable technology for Ethiopian market intelligence</p>
+            </div>
+
+            <div class="text-center">
+                <div class="trust-badge">
+                    <i class="fas fa-robot"></i>
+                    Powered by AI (Gemini API)
+                </div>
+                <div class="trust-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    Secure & Private
+                </div>
+                <div class="trust-badge">
+                    <i class="fas fa-globe-africa"></i>
+                    Ethiopia-Focused
+                </div>
+                <div class="trust-badge">
+                    <i class="fas fa-code"></i>
+                    Open Source
+                </div>
+            </div>
+
+            <div class="row justify-content-center mt-5">
+                <div class="col-lg-8">
+                    <div class="disclaimer">
+                        <h5><i class="fas fa-info-circle"></i> Disclaimer</h5>
+                        <p class="mb-0">
+                            Market insights are AI-generated estimates for decision support. This platform provides
+                            advisory information based on market patterns and should be used as one factor in your
+                            decision-making process. Always consider local market conditions and expert advice.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <div class="footer-widget">
+                        <h5><i class="fas fa-chart-line"></i> Market X</h5>
+                        <p>
+                            Empowering market participants with AI-driven intelligence for smarter economic
+                            decisions.
+                        </p>
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 mb-4">
+                    <div class="footer-widget">
+                        <h5>Quick Links</h5>
+                        <ul class="footer-links">
+                            <li><a href="/auth">Get Started</a></li>
+                            <li><a href="/about">About Us</a></li>
+                            <li><a href="/mobile">Mobile Access</a></li>
+                            <li><a href="/alerts">Market Alerts</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 mb-4">
+                    <div class="footer-widget">
+                        <h5>Features</h5>
+                        <ul class="footer-links">
+                            <li><a href="/analysis">Price Prediction</a></li>
+                            <li><a href="/dashboard">Market Analysis</a></li>
+                            <li><a href="/role-selection">Role-Based Insights</a></li>
+                            <li><a href="/mobile">Mobile Access</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 mb-4">
+                    <div class="footer-widget">
+                        <h5>Hackathon Project</h5>
+                        <p>
+                            Built with ❤️ for Ethiopia's agricultural ecosystem and market participants.
+                        </p>
+                        <ul class="footer-links">
+                            <li><a href="#">About the Team</a></li>
+                            <li><a href="#">Technology Stack</a></li>
+                            <li><a href="#">Future Roadmap</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="my-4" style="border-color: rgba(255,255,255,0.1);">
+
+            <div class="text-center">
+                <p>&copy; 2026 Market X. Hackathon Project. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', function () {
+            const navbar = document.querySelector('.navbar-custom');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

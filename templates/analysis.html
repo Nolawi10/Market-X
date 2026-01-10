@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Analysis - Market X</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c5f2d;
+            --secondary-color: #97bc62;
+            --accent-color: #ff6b35;
+            --text-dark: #2d3436;
+            --text-light: #636e72;
+            --bg-light: #f8f9fa;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+
+        /* Navigation */
+        .navbar-custom {
+            background: white;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .nav-link {
+            color: var(--text-dark);
+            font-weight: 500;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        /* Main Container */
+        .main-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            margin: 30px auto;
+            max-width: 1200px;
+            overflow: hidden;
+        }
+
+        /* Header Section */
+        .header-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Analysis Content */
+        .analysis-content {
+            padding: 40px;
+        }
+
+        /* Summary Section */
+        .summary-section {
+            background: var(--bg-light);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .summary-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .summary-title i {
+            color: var(--primary-color);
+            margin-right: 10px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .summary-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .summary-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .summary-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--text-dark);
+        }
+
+        /* Explanation Panel */
+        .explanation-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+
+        .explanation-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .explanation-icon {
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            margin-right: 20px;
+        }
+
+        .explanation-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .explanation-content {
+            line-height: 1.8;
+            color: var(--text-dark);
+            font-size: 1.1rem;
+        }
+
+        .reasoning-point {
+            background: var(--bg-light);
+            border-left: 4px solid var(--primary-color);
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .reasoning-point h5 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        /* Confidence Section */
+        .confidence-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+
+        .confidence-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .confidence-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .confidence-level {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .confidence-badge {
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .confidence-high {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .confidence-medium {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .confidence-low {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .confidence-meter {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 20px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transition: width 1s ease;
+            border-radius: 10px;
+        }
+
+        /* Factors Section */
+        .factors-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+
+        .factors-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+        }
+
+        .factor-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: var(--bg-light);
+            border-radius: 10px;
+        }
+
+        .factor-icon {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-right: 15px;
+            margin-top: 5px;
+        }
+
+        .factor-content {
+            flex: 1;
+        }
+
+        .factor-name {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+
+        .factor-description {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .factor-impact {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .impact-positive {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .impact-negative {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .impact-neutral {
+            background: #e2e3e5;
+            color: #383d41;
+        }
+
+        /* Action Recommendations */
+        .action-section {
+            background: linear-gradient(135deg, var(--accent-color), #ff8f65);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .action-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .action-steps {
+            list-style: none;
+            padding: 0;
+        }
+
+        .action-step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .step-number {
+            background: white;
+            color: var(--accent-color);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .step-description {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        /* Risk Indicators */
+        .risk-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+
+        .risk-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+        }
+
+        .risk-indicators {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .risk-indicator {
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid;
+        }
+
+        .risk-low {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+
+        .risk-medium {
+            background: #fff3cd;
+            border-color: #ffc107;
+            color: #856404;
+        }
+
+        .risk-high {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+
+        .risk-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .risk-label {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .risk-description {
+            font-size: 0.9rem;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .btn-action {
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(44, 95, 45, 0.3);
+        }
+
+        .btn-secondary-custom {
+            background: white;
+            color: var(--text-dark);
+            border: 2px solid #e9ecef;
+        }
+
+        .btn-secondary-custom:hover {
+            background: var(--bg-light);
+            border-color: var(--primary-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-container {
+                margin: 20px;
+                border-radius: 15px;
+            }
+
+            .header-section {
+                padding: 30px 20px;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .analysis-content {
+                padding: 20px;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn-action {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-chart-line"></i> Market X
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/alerts">Alerts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/mobile">Mobile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <div class="main-container">
+            <!-- Header Section -->
+            <div class="header-section">
+                <h1 class="page-title">Market Analysis & Explanation</h1>
+                <p class="page-subtitle">Understanding the AI reasoning behind your market recommendations</p>
+            </div>
+
+            <!-- Analysis Content -->
+            <div class="analysis-content">
+                <!-- Summary Section -->
+                <div class="summary-section">
+                    <h2 class="summary-title">
+                        <i class="fas fa-chart-pie"></i> Analysis Summary
+                    </h2>
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <div class="summary-label">Product</div>
+                            <div class="summary-value" id="summaryProduct">-</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">Market</div>
+                            <div class="summary-value" id="summaryMarket">-</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">Recommendation</div>
+                            <div class="summary-value" id="summaryRecommendation">-</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">Trend</div>
+                            <div class="summary-value" id="summaryTrend">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Explanation Panel -->
+                <div class="explanation-panel">
+                    <div class="explanation-header">
+                        <div class="explanation-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <h2 class="explanation-title">AI Reasoning</h2>
+                    </div>
+                    <div class="explanation-content">
+                        <div class="reasoning-point">
+                            <h5>Market Analysis</h5>
+                            <p id="marketReasoning">
+                                Based on current market conditions and seasonal patterns, the AI has analyzed supply and
+                                demand factors to provide this recommendation.
+                            </p>
+                        </div>
+                        <div class="reasoning-point">
+                            <h5>Price Factors</h5>
+                            <p id="priceReasoning">
+                                Price predictions consider historical data, seasonal variations, and current market
+                                sentiment across major Ethiopian markets.
+                            </p>
+                        </div>
+                        <div class="reasoning-point">
+                            <h5>Recommended Action</h5>
+                            <p id="actionReasoning">
+                                This recommendation is designed to maximize your advantage based on your specific role
+                                and current market dynamics.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Confidence Section -->
+                <div class="confidence-section">
+                    <div class="confidence-header">
+                        <h3 class="confidence-title">
+                            <i class="fas fa-gauge"></i> Confidence Level
+                        </h3>
+                        <div class="confidence-level">
+                            <span class="confidence-badge confidence-medium" id="confidenceBadge">Medium</span>
+                        </div>
+                    </div>
+                    <div class="confidence-meter">
+                        <div class="confidence-fill" id="confidenceFill" style="width: 60%;"></div>
+                    </div>
+                    <p class="mt-3 text-muted" id="confidenceExplanation">
+                        Confidence is based on data availability, market stability, and pattern recognition accuracy.
+                    </p>
+                </div>
+
+                <!-- Factors Section -->
+                <div class="factors-section">
+                    <h3 class="factors-title">
+                        <i class="fas fa-list-check"></i> Key Factors Considered
+                    </h3>
+
+                    <div class="factor-item">
+                        <div class="factor-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="factor-content">
+                            <div class="factor-name">Seasonal Patterns</div>
+                            <div class="factor-description">
+                                Historical seasonal trends for this product in Ethiopian markets
+                            </div>
+                            <span class="factor-impact impact-positive">Positive Impact</span>
+                        </div>
+                    </div>
+
+                    <div class="factor-item">
+                        <div class="factor-icon">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <div class="factor-content">
+                            <div class="factor-name">Supply Chain Conditions</div>
+                            <div class="factor-description">
+                                Current transportation and logistics affecting market supply
+                            </div>
+                            <span class="factor-impact impact-neutral">Neutral Impact</span>
+                        </div>
+                    </div>
+
+                    <div class="factor-item">
+                        <div class="factor-icon">
+                            <i class="fas fa-cloud-sun"></i>
+                        </div>
+                        <div class="factor-content">
+                            <div class="factor-name">Weather Conditions</div>
+                            <div class="factor-description">
+                                Recent weather patterns affecting crop production and quality
+                            </div>
+                            <span class="factor-impact impact-negative">Negative Impact</span>
+                        </div>
+                    </div>
+
+                    <div class="factor-item">
+                        <div class="factor-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="factor-content">
+                            <div class="factor-name">Market Demand</div>
+                            <div class="factor-description">
+                                Current consumer and business demand levels
+                            </div>
+                            <span class="factor-impact impact-positive">Positive Impact</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Risk Indicators -->
+                <div class="risk-section">
+                    <h3 class="risk-title">
+                        <i class="fas fa-exclamation-triangle"></i> Risk Assessment
+                    </h3>
+                    <div class="risk-indicators">
+                        <div class="risk-indicator risk-low">
+                            <div class="risk-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="risk-label">Market Volatility</div>
+                            <div class="risk-description">Low risk expected</div>
+                        </div>
+                        <div class="risk-indicator risk-medium">
+                            <div class="risk-icon">
+                                <i class="fas fa-temperature-high"></i>
+                            </div>
+                            <div class="risk-label">Weather Risk</div>
+                            <div class="risk-description">Moderate concern</div>
+                        </div>
+                        <div class="risk-indicator risk-low">
+                            <div class="risk-icon">
+                                <i class="fas fa-route"></i>
+                            </div>
+                            <div class="risk-label">Transportation</div>
+                            <div class="risk-description">Stable conditions</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Recommendations -->
+                <div class="action-section">
+                    <h2 class="action-title">
+                        <i class="fas fa-play-circle"></i> Recommended Actions
+                    </h2>
+                    <ol class="action-steps">
+                        <li class="action-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <div class="step-title">Monitor Market Conditions</div>
+                                <div class="step-description">
+                                    Keep track of daily price changes and market sentiment in your area
+                                </div>
+                            </div>
+                        </li>
+                        <li class="action-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <div class="step-title">Timing Your Decision</div>
+                                <div class="step-description">
+                                    Follow the AI recommendation timeline for optimal results
+                                </div>
+                            </div>
+                        </li>
+                        <li class="action-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <div class="step-title">Market Selection</div>
+                                <div class="step-description">
+                                    Consider the recommended market location for better returns
+                                </div>
+                            </div>
+                        </li>
+                        <li class="action-step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <div class="step-title">Stay Informed</div>
+                                <div class="step-description">
+                                    Set up alerts for significant market changes
+                                </div>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="btn-action btn-primary-custom" onclick="goToDashboard()">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </button>
+                    <button class="btn-action btn-secondary-custom" onclick="setAlert()">
+                        <i class="fas fa-bell"></i> Set Market Alert
+                    </button>
+                    <button class="btn-action btn-secondary-custom" onclick="exportAnalysis()">
+                        <i class="fas fa-download"></i> Export Analysis
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize page with sample data or stored analysis
+        window.addEventListener('load', function () {
+            loadAnalysisData();
+        });
+
+        function loadAnalysisData() {
+            // Try to get stored analysis data
+            const storedAnalysis = sessionStorage.getItem('lastAnalysis');
+
+            if (storedAnalysis) {
+                const data = JSON.parse(storedAnalysis);
+                updateAnalysisDisplay(data);
+            } else {
+                // Show sample data for demo
+                const sampleData = {
+                    product: 'Teff',
+                    market: 'Addis Ababa',
+                    recommendation: 'Wait 3-5 days',
+                    trend: 'Rising',
+                    confidence: 'Medium',
+                    reasoning: 'Seasonal demand increase expected next week due to holiday preparations'
+                };
+                updateAnalysisDisplay(sampleData);
+            }
+        }
+
+        function updateAnalysisDisplay(data) {
+            // Update summary section
+            document.getElementById('summaryProduct').textContent = data.product || '-';
+            document.getElementById('summaryMarket').textContent = data.market || '-';
+            document.getElementById('summaryRecommendation').textContent = data.recommendation || '-';
+            document.getElementById('summaryTrend').textContent = data.trend || '-';
+
+            // Update reasoning sections
+            if (data.reasoning) {
+                document.getElementById('marketReasoning').textContent = data.reasoning;
+            }
+
+            // Update confidence
+            if (data.confidence) {
+                updateConfidence(data.confidence);
+            }
+        }
+
+        function updateConfidence(level) {
+            const badge = document.getElementById('confidenceBadge');
+            const fill = document.getElementById('confidenceFill');
+            const explanation = document.getElementById('confidenceExplanation');
+
+            // Remove existing classes
+            badge.className = 'confidence-badge';
+
+            // Set based on level
+            const confidenceData = {
+                'High': {
+                    class: 'confidence-high',
+                    width: '90%',
+                    explanation: 'High confidence based on strong pattern recognition and sufficient data.'
+                },
+                'Medium': {
+                    class: 'confidence-medium',
+                    width: '60%',
+                    explanation: 'Moderate confidence with some uncertainty due to market volatility.'
+                },
+                'Low': {
+                    class: 'confidence-low',
+                    width: '30%',
+                    explanation: 'Lower confidence due to limited data or unpredictable market conditions.'
+                }
+            };
+
+            const config = confidenceData[level] || confidenceData['Medium'];
+
+            badge.classList.add(config.class);
+            badge.textContent = level;
+            fill.style.width = config.width;
+            explanation.textContent = config.explanation;
+        }
+
+        function goToDashboard() {
+            window.location.href = '/dashboard';
+        }
+
+        function setAlert() {
+            window.location.href = '/alerts';
+        }
+
+        function exportAnalysis() {
+            // Create analysis summary
+            const analysisData = {
+                product: document.getElementById('summaryProduct').textContent,
+                market: document.getElementById('summaryMarket').textContent,
+                recommendation: document.getElementById('summaryRecommendation').textContent,
+                trend: document.getElementById('summaryTrend').textContent,
+                timestamp: new Date().toISOString()
+            };
+
+            // Convert to JSON and download
+            const dataStr = JSON.stringify(analysisData, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+            const exportFileDefaultName = `marketx-analysis-${Date.now()}.json`;
+
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+        }
+    </script>
+</body>
+
+</html>

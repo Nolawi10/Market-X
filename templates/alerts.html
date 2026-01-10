@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Alerts - Market X</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c5f2d;
+            --secondary-color: #97bc62;
+            --accent-color: #ff6b35;
+            --text-dark: #2d3436;
+            --text-light: #636e72;
+            --bg-light: #f8f9fa;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+
+        /* Navigation */
+        .navbar-custom {
+            background: white;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .nav-link {
+            color: var(--text-dark);
+            font-weight: 500;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        /* Main Container */
+        .main-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            margin: 30px auto;
+            max-width: 1200px;
+            overflow: hidden;
+        }
+
+        /* Header Section */
+        .header-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Alerts Content */
+        .alerts-content {
+            padding: 40px;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background: var(--bg-light);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .filter-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-select {
+            min-width: 150px;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+            position: relative;
+        }
+
+        .search-input {
+            padding-left: 40px;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        /* Alert Cards */
+        .alert-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .alert-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .alert-card.opportunity {
+            border-left-color: var(--success-color);
+        }
+
+        .alert-card.caution {
+            border-left-color: var(--warning-color);
+        }
+
+        .alert-card.risk {
+            border-left-color: var(--danger-color);
+        }
+
+        .alert-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .alert-type {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .alert-type.opportunity {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .alert-type.caution {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .alert-type.risk {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .alert-time {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .alert-time i {
+            margin-right: 5px;
+        }
+
+        .alert-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .alert-description {
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .alert-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .alert-detail {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .alert-detail i {
+            color: var(--primary-color);
+            margin-right: 8px;
+            font-size: 1rem;
+        }
+
+        .alert-detail-label {
+            color: var(--text-light);
+            margin-right: 5px;
+        }
+
+        .alert-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-alert {
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-view {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-view:hover {
+            background: var(--secondary-color);
+        }
+
+        .btn-dismiss {
+            background: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        .btn-dismiss:hover {
+            background: #e9ecef;
+        }
+
+        /* Statistics Section */
+        .stats-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-light);
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            color: #e9ecef;
+            margin-bottom: 20px;
+        }
+
+        .empty-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .empty-description {
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        /* Alert Creation Modal */
+        .modal-content {
+            border-radius: 15px;
+            border: none;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* Notification Settings */
+        .notification-settings {
+            background: var(--bg-light);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .settings-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-info {
+            flex: 1;
+        }
+
+        .setting-name {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+
+        .setting-description {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .form-switch {
+            transform: scale(1.2);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-container {
+                margin: 20px;
+                border-radius: 15px;
+            }
+
+            .header-section {
+                padding: 30px 20px;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .alerts-content {
+                padding: 20px;
+            }
+
+            .filter-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .alert-details {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-chart-line"></i> Market X
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/analysis">Analysis</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/mobile">Mobile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <div class="main-container">
+            <!-- Header Section -->
+            <div class="header-section">
+                <h1 class="page-title">Market Alerts & Notifications</h1>
+                <p class="page-subtitle">Stay informed about important market changes and opportunities</p>
+            </div>
+
+            <!-- Alerts Content -->
+            <div class="alerts-content">
+                <!-- Statistics Section -->
+                <div class="stats-section">
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number">12</div>
+                            <div class="stat-label">Active Alerts</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">3</div>
+                            <div class="stat-label">New Today</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">85%</div>
+                            <div class="stat-label">Accuracy Rate</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">24</div>
+                            <div class="stat-label">Hours Coverage</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filter Section -->
+                <div class="filter-section">
+                    <h3 class="filter-title">
+                        <i class="fas fa-filter"></i> Filter Alerts
+                    </h3>
+                    <div class="filter-controls">
+                        <select class="form-select filter-select" id="urgencyFilter">
+                            <option value="">All Urgency</option>
+                            <option value="high">High Priority</option>
+                            <option value="medium">Medium Priority</option>
+                            <option value="low">Low Priority</option>
+                        </select>
+
+                        <select class="form-select filter-select" id="productFilter">
+                            <option value="">All Products</option>
+                            <option value="teff">Teff</option>
+                            <option value="coffee">Coffee</option>
+                            <option value="maize">Maize</option>
+                            <option value="wheat">Wheat</option>
+                        </select>
+
+                        <select class="form-select filter-select" id="marketFilter">
+                            <option value="">All Markets</option>
+                            <option value="addis-ababa">Addis Ababa</option>
+                            <option value="mekelle">Mekelle</option>
+                            <option value="gondar">Gondar</option>
+                            <option value="bahirdar">Bahirdar</option>
+                        </select>
+
+                        <div class="search-box">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" class="form-control search-input" placeholder="Search alerts...">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alert Cards -->
+                <div id="alertsContainer">
+                    <!-- Opportunity Alert -->
+                    <div class="alert-card opportunity" data-urgency="high" data-product="teff"
+                        data-market="addis-ababa">
+                        <div class="alert-header">
+                            <span class="alert-type opportunity">
+                                <i class="fas fa-arrow-trend-up"></i> Opportunity
+                            </span>
+                            <span class="alert-time">
+                                <i class="fas fa-clock"></i> 2 hours ago
+                            </span>
+                        </div>
+                        <h3 class="alert-title">Price Spike Expected in Addis Ababa</h3>
+                        <p class="alert-description">
+                            Teff prices are projected to increase by 15-20% over the next 3 days due to increased demand
+                            for upcoming holidays. Consider selling now or waiting for maximum returns.
+                        </p>
+                        <div class="alert-details">
+                            <div class="alert-detail">
+                                <i class="fas fa-box"></i>
+                                <span class="alert-detail-label">Product:</span>
+                                <span>Teff</span>
+                            </div>
+                            <div class="alert-detail">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span class="alert-detail-label">Market:</span>
+                                <span>Addis Ababa</span>
+                            </div>
+                            <div class="alert-detail">
+                                <i class="fas fa-percentage"></i>
+                                <span class="alert-detail-label">Expected Gain:</span>
+                                <span>+15-20%</span>
+                            </div>
+                            <div class="alert-detail">
+                                <i class="fas fa-calendar"></i>
+                                <span class="alert-detail-label">Timeframe:</span>
+                                <span>3 days</span>
+                            </div>
+                        </div>
+                        <div class="alert-actions">
+                            <button class="btn-alert btn-view" onclick="viewAlertDetails(this)">
+                                <i class="fas fa-eye"></i> View Details
+                            </button>
+                            <button class="btn-alert btn-dismiss" onclick="dismissAlert(this)">
+                                <i class="fas fa-times"></i> Dismiss
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Caution Alert -->
+                    <div class="alert-card caution" data-urgency="medium" data-product="coffee" data-market="jimma">
+                        <div class="alert-header">
+                            <span class="alert-type caution">
+                                <i class="fas fa-exclamation-triangle"></i> Caution
+                            </span>
+                            <span class="alert-time">
+                                <i class="fas fa-clock"></i> 5 hours ago
+                            </span>
+                        </div>
+                        <h3 class="alert-title">High Supply Detected This Week</h3>
+                        <p class="alert-description">
+                            Coffee harvest season has begun in Jimma region, leading to increased market supply. Prices
+                            may stabilize or decrease slightly over the next week.
+                        </p>
+                        <div class="alert-details">
+                            <div class="alert-detail">
+                                <i class="fas fa-box"></i>
+                                <span class="alert-detail-label">Product:</span>
+                                <span>Coffee</span>
+                            </div>
+                            <div class="alert-detail">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span class="alert-detail-label">Market:</span>
+                                <span>Jimma</span>
+                            </div>
+                            <div class="alert-detail">
+                                <i class="fas fa-percentage"></i>
+                                <span class="alert-detail-label">Price Impact:</span>
+                                <span>-5-8%</span>
+                            </div>
+                            <div class="alert-detail">
+                                <i class="fas fa-calendar"></i>
+                                <span class="alert-detail-label">Duration:</span>
+                                <span>1 week</span>
+                            </div>
+                        </div>
+                        <div class="alert-actions">
+                            <button class="btn-alert btn-view" onclick="viewAlertDetails(this)">
+                                <i class="fas fa-eye"></i> View Details
+                            </button>
+                            <button class="btn-alert btn-dismiss" onclick="dismissAlert(this)">
+                                <i class="fas fa-times"></i> Dismiss
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Risk Alert -->
+                    <div class="alert-card risk" data-urgency="high" data-product="maize" data-market="mekelle">
+                        <div class="alert-header">
+                            <span class="alert-type risk">
+                                <i class="fas fa-exclamation-circle"></i> Risk
+                            </span>
+                            <span class="alert-time">
+                                <i class="fas fa-clock"></i> 1 day ago
+                            </span>
+                        </div>
+                        <h3 class="alert-title">Transportation Disruptions Expected</h3>
+                        <p class="alert-description">
+                            Road maintenance work on major routes to Mekelle may cause delays in maize deliveries.
+                            Consider alternative markets or adjust timing accordingly.
+                        </p>
+                        <div class="alert-details">
+                            <div class="alert-detail">
+                                <i class="fas fa-box"></i>
+                                <span class="alert-detail-label">Product:</span>
+                                <span>Maize</span>
+                            </div>
+                            <div class="alert-detail">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span class="alert-detail-label">Market:</span>
+                                <span>Mekelle</span>
+                            </div>
+                            <div class="alert-detail">
+                                <i class="fas fa-truck"></i>
+                                <span class="alert-detail-label">Issue:</span>
+                                <span>Transport</span>
+                            </div>
+                            <div class="alert-detail">
+                                <i class="fas fa-calendar"></i>
+                                <span class="alert-detail-label">Duration:</span>
+                                <span>4-5 days</span>
+                            </div>
+                        </div>
+                        <div class="alert-actions">
+                            <button class="btn-alert btn-view" onclick="viewAlertDetails(this)">
+                                <i class="fas fa-eye"></i> View Details
+                            </button>
+                            <button class="btn-alert btn-dismiss" onclick="dismissAlert(this)">
+                                <i class="fas fa-times"></i> Dismiss
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Opportunity Alert -->
+                    <div class="alert-card opportunity" data-urgency="medium" data-product="vegetables"
+                        data-market="bahirdar">
+                        <div class="alert-header">
+                            <span class="alert-type opportunity">
+                                <i class="fas fa-arrow-trend-up"></i> Opportunity
+                            </span>
+                            <span class="alert-time">
+                                <i class="fas fa-clock"></i> 2 days ago
+                            </span>
+                        </div>
+                        <h3 class="alert-title">Favorable Selling Window Approaching</h3>
+                        <p class="alert-description">
+                            Vegetable prices in Bahirdar are expected to rise as hotel season begins. Current inventory
+                            levels suggest good selling conditions.
+                        </p>
+                        <div class="alert-details">
+                            <div class="alert-detail">
+                                <i class="fas fa-box"></i>
+                                <span class="alert-detail-label">Product:</span>
+                                <span>Vegetables</span>
+                            </div>
+                            <div class="alert-detail">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span class="alert-detail-label">Market:</span>
+                                <span>Bahirdar</span>
+                            </div>
+                            <div class="alert-detail">
+                                <i class="fas fa-percentage"></i>
+                                <span class="alert-detail-label">Price Impact:</span>
+                                <span>+10-12%</span>
+                            </div>
+                            <div class="alert-detail">
+                                <i class="fas fa-calendar"></i>
+                                <span class="alert-detail-label">Best Time:</span>
+                                <span>Next 5 days</span>
+                            </div>
+                        </div>
+                        <div class="alert-actions">
+                            <button class="btn-alert btn-view" onclick="viewAlertDetails(this)">
+                                <i class="fas fa-eye"></i> View Details
+                            </button>
+                            <button class="btn-alert btn-dismiss" onclick="dismissAlert(this)">
+                                <i class="fas fa-times"></i> Dismiss
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notification Settings -->
+                <div class="notification-settings">
+                    <h3 class="settings-title">
+                        <i class="fas fa-cog"></i> Notification Preferences
+                    </h3>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-name">Price Spike Alerts</div>
+                            <div class="setting-description">Get notified when prices are expected to rise significantly
+                            </div>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="priceSpikes" checked>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-name">Supply Changes</div>
+                            <div class="setting-description">Alerts about major supply fluctuations in your markets
+                            </div>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="supplyChanges" checked>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-name">Transportation Issues</div>
+                            <div class="setting-description">Notifications about logistics and transportation
+                                disruptions</div>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="transportIssues">
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-name">Daily Market Summary</div>
+                            <div class="setting-description">Receive a daily summary of market conditions and
+                                opportunities</div>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="dailySummary">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Details Modal -->
+    <div class="modal fade" id="alertModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Alert Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="modalContent">
+                        <!-- Dynamic content will be inserted here -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="createCustomAlert()">Create Custom
+                        Alert</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Filter functionality
+        document.getElementById('urgencyFilter').addEventListener('change', filterAlerts);
+        document.getElementById('productFilter').addEventListener('change', filterAlerts);
+        document.getElementById('marketFilter').addEventListener('change', filterAlerts);
+        document.querySelector('.search-input').addEventListener('input', filterAlerts);
+
+        function filterAlerts() {
+            const urgency = document.getElementById('urgencyFilter').value;
+            const product = document.getElementById('productFilter').value;
+            const market = document.getElementById('marketFilter').value;
+            const searchTerm = document.querySelector('.search-input').value.toLowerCase();
+
+            const alerts = document.querySelectorAll('.alert-card');
+
+            alerts.forEach(alert => {
+                let show = true;
+
+                if (urgency && alert.dataset.urgency !== urgency) show = false;
+                if (product && alert.dataset.product !== product) show = false;
+                if (market && alert.dataset.market !== market) show = false;
+                if (searchTerm && !alert.textContent.toLowerCase().includes(searchTerm)) show = false;
+
+                alert.style.display = show ? 'block' : 'none';
+            });
+
+            checkEmptyState();
+        }
+
+        function checkEmptyState() {
+            const visibleAlerts = document.querySelectorAll('.alert-card[style="display: block;"], .alert-card:not([style])');
+            const container = document.getElementById('alertsContainer');
+
+            if (visibleAlerts.length === 0) {
+                if (!document.getElementById('emptyState')) {
+                    const emptyState = document.createElement('div');
+                    emptyState.id = 'emptyState';
+                    emptyState.className = 'empty-state';
+                    emptyState.innerHTML = `
+                        <div class="empty-icon">
+                            <i class="fas fa-bell-slash"></i>
+                        </div>
+                        <h3 class="empty-title">No Alerts Found</h3>
+                        <p class="empty-description">
+                            Try adjusting your filters or check back later for new market alerts.
+                        </p>
+                    `;
+                    container.appendChild(emptyState);
+                }
+            } else {
+                const emptyState = document.getElementById('emptyState');
+                if (emptyState) {
+                    emptyState.remove();
+                }
+            }
+        }
+
+        function viewAlertDetails(button) {
+            const alertCard = button.closest('.alert-card');
+            const title = alertCard.querySelector('.alert-title').textContent;
+            const description = alertCard.querySelector('.alert-description').textContent;
+            const type = alertCard.querySelector('.alert-type').textContent.trim();
+
+            const modalContent = document.getElementById('modalContent');
+            modalContent.innerHTML = `
+                <div class="alert-details-expanded">
+                    <div class="mb-3">
+                        <span class="alert-type ${type.toLowerCase().includes('opportunity') ? 'opportunity' : type.toLowerCase().includes('caution') ? 'caution' : 'risk'}">
+                            ${type}
+                        </span>
+                    </div>
+                    <h4>${title}</h4>
+                    <p class="text-muted">${description}</p>
+                    
+                    <h5 class="mt-4">Market Analysis</h5>
+                    <p>This alert is based on AI analysis of market patterns, seasonal trends, and current conditions affecting the Ethiopian agricultural market.</p>
+                    
+                    <h5 class="mt-4">Recommended Actions</h5>
+                    <ul>
+                        <li>Monitor market conditions closely over the next few days</li>
+                        <li>Consider adjusting your selling/buying timeline</li>
+                        <li>Stay updated on local market developments</li>
+                        <li>Set up additional alerts for related products/markets</li>
+                    </ul>
+                    
+                    <h5 class="mt-4">Related Markets</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded">
+                                <strong>Addis Ababa</strong><br>
+                                <small class="text-muted">Similar conditions expected</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded">
+                                <strong>Hawassa</strong><br>
+                                <small class="text-muted">Market conditions stable</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const modal = new bootstrap.Modal(document.getElementById('alertModal'));
+            modal.show();
+        }
+
+        function dismissAlert(button) {
+            const alertCard = button.closest('.alert-card');
+            alertCard.style.transition = 'all 0.3s ease';
+            alertCard.style.opacity = '0';
+            alertCard.style.transform = 'translateX(100%)';
+
+            setTimeout(() => {
+                alertCard.remove();
+                checkEmptyState();
+                updateStats();
+            }, 300);
+        }
+
+        function updateStats() {
+            const activeAlerts = document.querySelectorAll('.alert-card').length;
+            document.querySelector('.stat-number').textContent = activeAlerts;
+        }
+
+        function createCustomAlert() {
+            // This would open a form to create custom alerts
+            alert('Custom alert creation feature coming soon!');
+        }
+
+        // Initialize
+        window.addEventListener('load', function () {
+            checkEmptyState();
+        });
+    </script>
+</body>
+
+</html>

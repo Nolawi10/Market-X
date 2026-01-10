@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Who Are You? - Market X</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c5f2d;
+            --secondary-color: #97bc62;
+            --accent-color: #ff6b35;
+            --text-dark: #2d3436;
+            --text-light: #636e72;
+            --bg-light: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+
+        /* Navigation */
+        .navbar-custom {
+            background: transparent;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-custom.scrolled {
+            background: white;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-custom.scrolled .navbar-brand,
+        .navbar-custom.scrolled .nav-link {
+            color: var(--text-dark);
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: white;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: white;
+        }
+
+        /* Main Container */
+        .main-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            margin: 120px auto 50px;
+            max-width: 1200px;
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header Section */
+        .header-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 0;
+        }
+
+        /* Role Selection Section */
+        .role-selection-section {
+            padding: 60px 40px;
+        }
+
+        .role-card {
+            background: white;
+            border: none;
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .role-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+        }
+
+        .role-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .role-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .role-card.selected {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(44, 95, 45, 0.3);
+        }
+
+        .role-card.selected::before {
+            opacity: 0;
+        }
+
+        .role-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .role-icon {
+            font-size: 4rem;
+            margin-bottom: 25px;
+            color: var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .role-card:hover .role-icon {
+            transform: scale(1.1);
+        }
+
+        .role-card.selected .role-icon {
+            color: white;
+        }
+
+        .role-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+
+        .role-card.selected .role-title {
+            color: white;
+        }
+
+        .role-description {
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .role-card.selected .role-description {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .role-features {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        .role-features li {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .role-features li i {
+            color: var(--secondary-color);
+            margin-right: 8px;
+            font-size: 0.8rem;
+        }
+
+        .role-card.selected .role-features li {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .role-card.selected .role-features li i {
+            color: white;
+        }
+
+        /* Action Section */
+        .action-section {
+            background: var(--bg-light);
+            padding: 40px;
+            text-align: center;
+        }
+
+        .btn-continue {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 15px 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(44, 95, 45, 0.3);
+        }
+
+        .btn-continue:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(44, 95, 45, 0.4);
+        }
+
+        .btn-continue:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .selection-message {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 15px 20px;
+            color: #856404;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        /* Progress Indicator */
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .progress-step {
+            display: flex;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        .progress-step.active {
+            color: white;
+        }
+
+        .progress-step.completed {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .progress-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .progress-step.active .progress-circle {
+            background: white;
+            color: var(--primary-color);
+        }
+
+        .progress-step.completed .progress-circle {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .progress-line {
+            width: 50px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.2);
+            margin: 0 15px;
+        }
+
+        .progress-step.completed+.progress-line {
+            background: var(--secondary-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-container {
+                margin: 100px 20px 30px;
+                border-radius: 15px;
+            }
+
+            .header-section {
+                padding: 40px 30px;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .role-selection-section {
+                padding: 40px 30px;
+            }
+
+            .role-card {
+                margin-bottom: 20px;
+            }
+
+            .action-section {
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-chart-line"></i> Market X
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">How It Works</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/mobile">Mobile Access</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <div class="main-container">
+            <!-- Header Section -->
+            <div class="header-section">
+                <div class="progress-indicator">
+                    <div class="progress-step completed">
+                        <div class="progress-circle">1</div>
+                        <span>Welcome</span>
+                    </div>
+                    <div class="progress-line"></div>
+                    <div class="progress-step active">
+                        <div class="progress-circle">2</div>
+                        <span>Who Are You?</span>
+                    </div>
+                    <div class="progress-line"></div>
+                    <div class="progress-step">
+                        <div class="progress-circle">3</div>
+                        <span>Dashboard</span>
+                    </div>
+                </div>
+
+                <h1 class="page-title">Who Are You?</h1>
+                <p class="page-subtitle">
+                    Select your role to receive relevant market insights tailored to your specific needs and goals.
+                </p>
+            </div>
+
+            <!-- Role Selection Section -->
+            <div class="role-selection-section">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="role-card" data-role="farmer">
+                            <div class="role-content">
+                                <div class="role-icon">
+                                    <i class="fas fa-seedling"></i>
+                                </div>
+                                <h3 class="role-title">Farmer</h3>
+                                <p class="role-description">
+                                    Maximize your income with selling guidance and market timing advice.
+                                </p>
+                                <ul class="role-features">
+                                    <li><i class="fas fa-check"></i> Best selling times</li>
+                                    <li><i class="fas fa-check"></i> Market price predictions</li>
+                                    <li><i class="fas fa-check"></i> Location recommendations</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="role-card" data-role="trader">
+                            <div class="role-content">
+                                <div class="role-icon">
+                                    <i class="fas fa-handshake"></i>
+                                </div>
+                                <h3 class="role-title">Trader / Wholesaler</h3>
+                                <p class="role-description">
+                                    Optimize your margins with supply insights and arbitrage opportunities.
+                                </p>
+                                <ul class="role-features">
+                                    <li><i class="fas fa-check"></i> Buy-low opportunities</li>
+                                    <li><i class="fas fa-check"></i> Supply-demand analysis</li>
+                                    <li><i class="fas fa-check"></i> Profit margin insights</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="role-card" data-role="business">
+                            <div class="role-content">
+                                <div class="role-icon">
+                                    <i class="fas fa-store"></i>
+                                </div>
+                                <h3 class="role-title">Business Owner</h3>
+                                <p class="role-description">
+                                    Reduce costs and avoid price spikes with smart purchasing guidance.
+                                </p>
+                                <ul class="role-features">
+                                    <li><i class="fas fa-check"></i> Cost optimization</li>
+                                    <li><i class="fas fa-check"></i> Price spike alerts</li>
+                                    <li><i class="fas fa-check"></i> Bulk purchase timing</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="role-card" data-role="consumer">
+                            <div class="role-content">
+                                <div class="role-icon">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </div>
+                                <h3 class="role-title">Consumer</h3>
+                                <p class="role-description">
+                                    Buy essentials at the lowest cost with simple price awareness tools.
+                                </p>
+                                <ul class="role-features">
+                                    <li><i class="fas fa-check"></i> Best buying times</li>
+                                    <li><i class="fas fa-check"></i> Price comparisons</li>
+                                    <li><i class="fas fa-check"></i> Budget planning</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="role-card" data-role="cooperative">
+                            <div class="role-content">
+                                <div class="role-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <h3 class="role-title">Cooperative</h3>
+                                <p class="role-description">
+                                    Coordinate group sales and maximize collective bargaining power.
+                                </p>
+                                <ul class="role-features">
+                                    <li><i class="fas fa-check"></i> Group selling strategies</li>
+                                    <li><i class="fas fa-check"></i> Market coordination</li>
+                                    <li><i class="fas fa-check"></i> Volume discounts</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="role-card" data-role="government">
+                            <div class="role-content">
+                                <div class="role-icon">
+                                    <i class="fas fa-landmark"></i>
+                                </div>
+                                <h3 class="role-title">Government / NGO</h3>
+                                <p class="role-description">
+                                    Monitor food security and support market stability programs.
+                                </p>
+                                <ul class="role-features">
+                                    <li><i class="fas fa-check"></i> Market monitoring</li>
+                                    <li><i class="fas fa-check"></i> Food security insights</li>
+                                    <li><i class="fas fa-check"></i> Policy support data</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Section -->
+            <div class="action-section">
+                <div class="selection-message" id="selectionMessage">
+                    <i class="fas fa-info-circle"></i> Please select your role to continue
+                </div>
+                <button class="btn-continue" id="continueBtn" disabled onclick="continueToDashboard()">
+                    <i class="fas fa-arrow-right"></i> Continue to Dashboard
+                </button>
+                <p class="mt-3 text-muted">
+                    <small>No registration required • Your role is stored locally for this session</small>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let selectedRole = '';
+
+        // Role selection
+        document.querySelectorAll('.role-card').forEach(card => {
+            card.addEventListener('click', function () {
+                // Remove previous selection
+                document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
+
+                // Add selection to clicked card
+                this.classList.add('selected');
+                selectedRole = this.dataset.role;
+
+                // Enable continue button
+                document.getElementById('continueBtn').disabled = false;
+                document.getElementById('selectionMessage').style.display = 'none';
+
+                // Submit role to backend
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/set-role';
+
+                const roleInput = document.createElement('input');
+                roleInput.type = 'hidden';
+                roleInput.name = 'role';
+                roleInput.value = selectedRole;
+
+                form.appendChild(roleInput);
+                document.body.appendChild(form);
+                form.submit();
+            });
+        });
+
+        // Continue to dashboard
+        function continueToDashboard() {
+            if (selectedRole) {
+                window.location.href = '/dashboard';
+            } else {
+                document.getElementById('selectionMessage').style.display = 'block';
+            }
+        }
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function () {
+            const navbar = document.querySelector('.navbar-custom');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Check for existing role selection
+        window.addEventListener('load', function () {
+            const existingRole = localStorage.getItem('selectedRole');
+            if (existingRole) {
+                const card = document.querySelector(`[data-role="${existingRole}"]`);
+                if (card) {
+                    card.click();
+                }
+            }
+        });
+
+        // Add pulse animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+                100% { transform: scale(1); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+
+</html>

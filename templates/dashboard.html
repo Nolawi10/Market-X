@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market X - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c5f2d;
+            --secondary-color: #97bc62;
+            --accent-color: #ff6b35;
+            --text-dark: #2d3436;
+            --text-light: #636e72;
+            --bg-light: #f8f9fa;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --info-color: #17a2b8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Navigation */
+        .navbar-custom {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-custom.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .navbar-brand:hover {
+            color: var(--secondary-color);
+        }
+
+        .nav-link {
+            color: var(--text-dark);
+            font-weight: 500;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+            text-decoration: none;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        /* Main Container */
+        .main-container {
+            margin: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+            min-height: calc(100vh - 120px);
+        }
+
+        /* Dashboard Header */
+        .dashboard-header {
+            padding: 30px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .dashboard-subtitle {
+            color: var(--text-light);
+            margin: 5px 0 0 0;
+            font-size: 1rem;
+        }
+
+        .role-badge {
+            background: var(--primary-color);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Dashboard Layout */
+        .dashboard-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            padding: 30px;
+        }
+
+        /* Input Panel */
+        .input-panel {
+            background: var(--bg-light);
+            padding: 25px;
+            border-radius: 12px;
+            border-right: 1px solid #e9ecef;
+        }
+
+        .panel-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-section {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .form-control,
+        .form-select {
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(44, 95, 45, 0.25);
+            outline: none;
+        }
+
+        .btn-analyze {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-analyze:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(44, 95, 45, 0.3);
+        }
+
+        /* Insight Panel */
+        .insight-panel {
+            background: white;
+        }
+
+        .insight-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .insight-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .refresh-btn {
+            background: var(--bg-light);
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .refresh-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+
+        .empty-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .empty-description {
+            color: var(--text-light);
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        /* Loading State */
+        .loading-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .spinner {
+            border: 3px solid var(--primary-color);
+            border-top: 3px solid transparent;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        /* Insight Cards */
+        .insight-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .insight-card {
+            background: var(--bg-light);
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .insight-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .insight-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .insight-label {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .insight-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .insight-description {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        /* Recommendation Card */
+        .recommendation-card {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .recommendation-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .recommendation-text {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .recommendation-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Trend Chart */
+        .trend-chart {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .chart-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .chart-canvas {
+            height: 300px;
+            background: var(--bg-light);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chart-placeholder {
+            text-align: center;
+            color: var(--text-light);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .dashboard-content {
+                grid-template-columns: 1fr;
+            }
+
+            .input-panel {
+                border-right: none;
+                border-bottom: 1px solid #e9ecef;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                margin: 20px;
+                border-radius: 15px;
+            }
+
+            .dashboard-header {
+                padding: 20px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .dashboard-title {
+                font-size: 1.5rem;
+            }
+
+            .input-panel,
+            .insight-panel {
+                padding: 20px;
+            }
+
+            .insight-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-chart-line"></i> Market X
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/role-selection">Change Role</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/analysis">Analysis</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/alerts">Alerts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/mobile">Mobile</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container-fluid">
+        <div class="main-container">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <div>
+                    <h1 class="dashboard-title">Market Dashboard</h1>
+                    <p class="dashboard-subtitle">AI-powered insights for smarter decisions</p>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <span class="role-badge" id="roleBadge">
+                        <i class="fas fa-user"></i> <span id="roleText">Farmer Mode</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Market Input Panel -->
+                <div class="input-panel">
+                    <h2 class="panel-title">
+                        <i class="fas fa-edit"></i> Market Insights
+                    </h2>
+
+                    <form id="analysisForm">
+                        <div class="form-section">
+                            <div class="mb-3">
+                                <label for="product" class="form-label">Product</label>
+                                <select class="form-select" id="product" required>
+                                    <option value="">Select product...</option>
+                                    <optgroup label="Cereal Crops">
+                                        <option value="teff">Teff</option>
+                                        <option value="maize">Maize</option>
+                                        <option value="wheat">Wheat</option>
+                                        <option value="sorghum">Sorghum</option>
+                                    </optgroup>
+                                    <optgroup label="Cash Crops">
+                                        <option value="coffee">Coffee</option>
+                                    </optgroup>
+                                    <optgroup label="Legumes">
+                                        <option value="beans">Beans</option>
+                                        <option value="lentils">Lentils</option>
+                                    </optgroup>
+                                    <optgroup label="Produce">
+                                        <option value="vegetables">Vegetables</option>
+                                        <option value="fruits">Fruits</option>
+                                    </optgroup>
+                                    <optgroup label="Livestock">
+                                        <option value="cattle">Cattle (Cows/Oxen)</option>
+                                        <option value="goats">Goats</option>
+                                        <option value="sheep">Sheep</option>
+                                        <option value="chickens">Chickens (Poultry)</option>
+                                        <option value="camels">Camels</option>
+                                        <option value="bees_honey">Bees & Honey</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="market" class="form-label">Market / Location</label>
+                                <select class="form-select" id="market" required>
+                                    <option value="">Select market...</option>
+                                    <option value="addis-ababa">Addis Ababa</option>
+                                    <option value="mekelle">Mekelle</option>
+                                    <option value="gondar">Gondar</option>
+                                    <option value="bahirdar">Bahirdar</option>
+                                    <option value="hawassa">Hawassa</option>
+                                    <option value="jimma">Jimma</option>
+                                    <option value="dire-dawa">Dire Dawa</option>
+                                    <option value="adama">Adama</option>
+                                    <option value="shashemene">Shashemene</option>
+                                    <option value="local">Local Market</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="quantity" class="form-label">Quantity</label>
+                                <input type="text" class="form-control" id="quantity"
+                                    placeholder="e.g., 100 kg, 5 quintals, 10 heads, 50 liters" required>
+                                <small class="text-muted" id="quantityHint">Enter quantity (kg/quintals for crops, heads
+                                    for animals, liters for honey)</small>
+                            </div>
+
+                            <button type="submit" class="btn-analyze" id="analyzeBtn">
+                                <i class="fas fa-brain"></i> Analyze Market
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Quick Stats -->
+                    <div class="form-section">
+                        <h5 class="mb-3">Quick Stats</h5>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Today's Analysis</span>
+                            <span class="fw-bold">0</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">This Week</span>
+                            <span class="fw-bold">0</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted">Success Rate</span>
+                            <span class="fw-bold text-success">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Insight Display Section -->
+                <div class="insight-panel">
+                    <div class="insight-header">
+                        <h2 class="insight-title">Market Insights</h2>
+                        <button class="refresh-btn" onclick="refreshInsights()">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div class="empty-state" id="emptyState">
+                        <div class="empty-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3 class="empty-title">Ready for Analysis</h3>
+                        <p class="empty-description">
+                            Enter market information on the left to receive AI-powered insights and recommendations.
+                        </p>
+                        <div class="text-muted">
+                            <small><i class="fas fa-lightbulb"></i> Get personalized advice based on your role and
+                                market conditions</small>
+                        </div>
+                    </div>
+
+                    <!-- Loading State -->
+                    <div class="loading-state" id="loadingState" style="display: none;">
+                        <div class="spinner"></div>
+                        <h4 class="loading-text">AI is analyzing market conditions...</h4>
+                        <p class="text-muted">This may take a few seconds</p>
+                    </div>
+
+                    <!-- Results Section -->
+                    <div id="resultsSection" style="display: none;">
+                        <!-- Recommendation Card -->
+                        <div class="recommendation-card" id="recommendationCard">
+                            <div class="recommendation-title">AI Recommendation</div>
+                            <div class="recommendation-text" id="recommendationText">-</div>
+                            <div class="recommendation-subtitle" id="recommendationSubtitle">-</div>
+                        </div>
+
+                        <!-- Insight Cards Grid -->
+                        <div class="insight-grid">
+                            <div class="insight-card" id="priceCard">
+                                <div class="insight-icon">
+                                    <i class="fas fa-dollar-sign"></i>
+                                </div>
+                                <div class="insight-label">Estimated Price</div>
+                                <div class="insight-value" id="priceValue">-</div>
+                                <div class="insight-description" id="priceDescription">-</div>
+                            </div>
+
+                            <div class="insight-card" id="trendCard">
+                                <div class="insight-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div class="insight-label">7-Day Trend</div>
+                                <div class="insight-value" id="trendValue">-</div>
+                                <div class="insight-description" id="trendDescription">-</div>
+                            </div>
+
+                            <div class="insight-card" id="marketCard">
+                                <div class="insight-icon">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div class="insight-label">Best Market</div>
+                                <div class="insight-value" id="marketValue">-</div>
+                                <div class="insight-description" id="marketDescription">-</div>
+                            </div>
+
+                            <div class="insight-card" id="confidenceCard">
+                                <div class="insight-icon">
+                                    <i class="fas fa-gauge"></i>
+                                </div>
+                                <div class="insight-label">Confidence</div>
+                                <div class="insight-value" id="confidenceValue">-</div>
+                                <div class="insight-description" id="confidenceDescription">-</div>
+                            </div>
+                        </div>
+
+                        <!-- Trend Chart -->
+                        <div class="trend-chart">
+                            <div class="chart-header">
+                                <h3 class="chart-title">Price Trend Projection</h3>
+                                <span class="badge bg-secondary">Next 7 Days</span>
+                            </div>
+                            <div class="chart-canvas">
+                                <div class="chart-placeholder">
+                                    <i class="fas fa-chart-area fa-3x mb-3"></i>
+                                    <p>Trend visualization will appear here</p>
+                                    <small>Based on AI analysis of market patterns</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Form submission
+        document.getElementById('analysisForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const formData = {
+                role: selectedRole,
+                product: document.getElementById('product').value,
+                market: document.getElementById('market').value,
+                quantity: document.getElementById('quantity').value
+            };
+
+            // Show loading state
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('resultsSection').style.display = 'none';
+            document.getElementById('loadingState').style.display = 'block';
+
+            // Simulate API call with animal-specific recommendations
+            setTimeout(() => {
+                // Hide loading state
+                document.getElementById('loadingState').style.display = 'none';
+
+                // Get product-specific recommendations
+                const recommendations = getAnimalSpecificRecommendations(formData.product, formData.quantity);
+
+                // Show results
+                document.getElementById('resultsSection').style.display = 'block';
+                document.getElementById('recommendationText').textContent = recommendations.recommendation;
+                document.getElementById('recommendationSubtitle').textContent = recommendations.subtitle;
+                document.getElementById('priceValue').textContent = recommendations.price;
+                document.getElementById('priceDescription').textContent = recommendations.priceDescription;
+                document.getElementById('trendValue').textContent = recommendations.trend;
+                document.getElementById('trendDescription').textContent = recommendations.trendDescription;
+                document.getElementById('marketValue').textContent = recommendations.bestMarket;
+                document.getElementById('marketDescription').textContent = recommendations.marketDescription;
+                document.getElementById('confidenceValue').textContent = recommendations.confidence;
+                document.getElementById('confidenceDescription').textContent = recommendations.confidenceDescription;
+            }, 2000);
+        });
+
+        // Get animal-specific recommendations
+        function getAnimalSpecificRecommendations(product, quantity) {
+            const animalRecommendations = {
+                'cattle': {
+                    recommendation: 'Sell at Addis Ababa livestock market for premium prices',
+                    subtitle: 'Large animals fetch better prices in urban markets',
+                    price: '25,000-35,000 ETB per head',
+                    priceDescription: 'Current market price for quality cattle',
+                    trend: '↑ Rising',
+                    trendDescription: 'Demand increasing for holiday season',
+                    bestMarket: 'Addis Ababa',
+                    marketDescription: 'Best prices for large livestock',
+                    confidence: 'High',
+                    confidenceDescription: 'Strong market data for cattle'
+                },
+                'goats': {
+                    recommendation: 'Consider selling in groups for better prices',
+                    subtitle: 'Small livestock markets active in regional towns',
+                    price: '3,500-4,500 ETB per head',
+                    priceDescription: 'Current market price for healthy goats',
+                    trend: '→ Stable',
+                    trendDescription: 'Consistent demand throughout year',
+                    bestMarket: 'Mekelle',
+                    marketDescription: 'Strong regional goat market',
+                    confidence: 'Medium',
+                    confidenceDescription: 'Moderate market activity'
+                },
+                'sheep': {
+                    recommendation: 'Good time to sell before Ramadan',
+                    subtitle: 'Religious festivals increase demand',
+                    price: '2,800-3,200 ETB per head',
+                    priceDescription: 'Current market price for quality sheep',
+                    trend: '↑ Rising',
+                    trendDescription: 'Seasonal demand approaching',
+                    bestMarket: 'Dire Dawa',
+                    marketDescription: 'Best prices for sheep',
+                    confidence: 'High',
+                    confidenceDescription: 'Seasonal pattern confirmed'
+                },
+                'chickens': {
+                    recommendation: 'Sell now - market at peak',
+                    subtitle: 'Poultry demand high in urban areas',
+                    price: '150-180 ETB per bird',
+                    priceDescription: 'Current market price for poultry',
+                    trend: '↓ Declining',
+                    trendDescription: 'Market saturation expected',
+                    bestMarket: 'Addis Ababa',
+                    marketDescription: 'Highest urban demand',
+                    confidence: 'Medium',
+                    confidenceDescription: 'Seasonal market variation'
+                },
+                'camels': {
+                    recommendation: 'Hold for better seasonal prices',
+                    subtitle: 'Camels fetch premium in dry season',
+                    price: '15,000-20,000 ETB per head',
+                    priceDescription: 'Current market price for camels',
+                    trend: '→ Stable',
+                    trendDescription: 'Steady demand throughout year',
+                    bestMarket: 'Jimma',
+                    marketDescription: 'Traditional camel market',
+                    confidence: 'Low',
+                    confidenceDescription: 'Limited market data'
+                },
+                'bees_honey': {
+                    recommendation: 'Extract now - honey prices high',
+                    subtitle: 'Honey demand peaks in dry season',
+                    price: '400-500 ETB per liter',
+                    priceDescription: 'Current market price for quality honey',
+                    trend: '↑ Rising',
+                    trendDescription: 'Export demand increasing',
+                    bestMarket: 'Bahir Dar',
+                    marketDescription: 'Best honey market region',
+                    confidence: 'Medium',
+                    confidenceDescription: 'Seasonal market factors'
+                }
+            };
+
+            // Default crop recommendations
+            const cropRecommendations = {
+                recommendation: 'Sell now for best price',
+                subtitle: 'Market expected to decline next week',
+                price: '2,500 ETB/kg',
+                priceDescription: 'Current market price',
+                trend: '↓ Declining',
+                trendDescription: 'Price expected to drop 15%',
+                bestMarket: 'Addis Ababa',
+                marketDescription: 'Best current market',
+                confidence: '85%',
+                confidenceDescription: 'High confidence in prediction'
+            };
+
+            return animalRecommendations[product] || cropRecommendations;
+        }
+
+        // Update quantity hint based on product selection
+        document.getElementById('product').addEventListener('change', function () {
+            const product = this.value;
+            const quantityHint = document.getElementById('quantityHint');
+
+            const hints = {
+                'cattle': 'Enter number of heads (e.g., 5 heads)',
+                'goats': 'Enter number of heads (e.g., 10 heads)',
+                'sheep': 'Enter number of heads (e.g., 15 heads)',
+                'chickens': 'Enter number of birds (e.g., 50 birds)',
+                'camels': 'Enter number of heads (e.g., 2 heads)',
+                'bees_honey': 'Enter quantity in liters (e.g., 20 liters)'
+            };
+
+            quantityHint.textContent = hints[product] || 'Enter quantity in kg or quintals';
+        });
+
+        // Refresh insights
+        function refreshInsights() {
+            document.getElementById('resultsSection').style.display = 'none';
+            document.getElementById('emptyState').style.display = 'block';
+        }
+
+        // Role management
+        let selectedRole = 'farmer'; // Default role
+
+        // Update role text based on user role
+        function updateRoleText(role) {
+            const roleTexts = {
+                'farmer': 'Farmer Mode',
+                'business': 'Business Mode',
+                'trader': 'Trader Mode',
+                'consumer': 'Consumer Mode',
+                'cooperative': 'Cooperative Mode',
+                'government': 'Government Mode'
+            };
+
+            const roleTextElement = document.getElementById('roleText');
+            if (roleTextElement) {
+                roleTextElement.textContent = roleTexts[role] || 'Farmer Mode';
+            }
+        }
+
+        // Initialize role text
+        updateRoleText(selectedRole);
+    </script>
+</body>
+
+</html>

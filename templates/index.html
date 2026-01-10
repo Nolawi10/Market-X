@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market X - Smart Market Intelligence</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c5f2d;
+            --secondary-color: #97bc62;
+            --accent-color: #ff6b35;
+            --text-dark: #2d3436;
+            --text-light: #636e72;
+            --bg-light: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+
+        .main-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            max-width: 1200px;
+            overflow: hidden;
+        }
+
+        .header-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header-section h1 {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+
+        .header-section .subtitle {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .role-selection {
+            padding: 40px;
+            background: var(--bg-light);
+        }
+
+        .role-card {
+            background: white;
+            border: none;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            height: 100%;
+        }
+
+        .role-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .role-card.selected {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .role-card i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .role-card.selected i {
+            color: white;
+        }
+
+        .market-form {
+            padding: 40px;
+            display: none;
+        }
+
+        .form-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-control,
+        .form-select {
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            padding: 12px 15px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(44, 95, 45, 0.25);
+        }
+
+        .btn-analyze {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-analyze:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(44, 95, 45, 0.3);
+        }
+
+        .results-section {
+            padding: 40px;
+            display: none;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+        }
+
+        .recommendation-badge {
+            background: linear-gradient(135deg, var(--accent-color), #ff8f65);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .trend-indicator {
+            display: inline-block;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .trend-up {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .trend-down {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .trend-stable {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .confidence-meter {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transition: width 0.5s ease;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .header-section h1 {
+                font-size: 2rem;
+            }
+
+            .role-card {
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="main-container">
+            <!-- Header -->
+            <div class="header-section">
+                <h1><i class="fas fa-chart-line"></i> Market X</h1>
+                <p class="subtitle">AI-Powered Market Intelligence for Smarter Decisions in Ethiopia</p>
+            </div>
+
+            <!-- Role Selection -->
+            <div class="role-selection" id="roleSelection">
+                <h2 class="text-center mb-4">Who are you?</h2>
+                <div class="row">
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="role-card" data-role="farmer">
+                            <i class="fas fa-seedling"></i>
+                            <h5>Farmer</h5>
+                            <p class="mb-0">Maximize selling prices</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="role-card" data-role="trader">
+                            <i class="fas fa-handshake"></i>
+                            <h5>Trader</h5>
+                            <p class="mb-0">Buy low, sell high</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="role-card" data-role="business">
+                            <i class="fas fa-store"></i>
+                            <h5>Business</h5>
+                            <p class="mb-0">Reduce costs</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="role-card" data-role="consumer">
+                            <i class="fas fa-shopping-cart"></i>
+                            <h5>Consumer</h5>
+                            <p class="mb-0">Buy at lowest cost</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Market Input Form -->
+            <div class="market-form" id="marketForm">
+                <div class="form-section">
+                    <h3 class="mb-4">Market Information</h3>
+                    <form id="analysisForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="product" class="form-label">Product/Crop Type</label>
+                                <select class="form-select" id="product" required>
+                                    <option value="">Select product...</option>
+                                    <option value="teff">Teff</option>
+                                    <option value="coffee">Coffee</option>
+                                    <option value="maize">Maize</option>
+                                    <option value="wheat">Wheat</option>
+                                    <option value="sorghum">Sorghum</option>
+                                    <option value="beans">Beans</option>
+                                    <option value="lentils">Lentils</option>
+                                    <option value="vegetables">Vegetables</option>
+                                    <option value="fruits">Fruits</option>
+                                    <option value="livestock">Livestock</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="market" class="form-label">Market/Location</label>
+                                <select class="form-select" id="market" required>
+                                    <option value="">Select market...</option>
+                                    <option value="addis-ababa">Addis Ababa</option>
+                                    <option value="mekelle">Mekelle</option>
+                                    <option value="gondar">Gondar</option>
+                                    <option value="bahirdar">Bahirdar</option>
+                                    <option value="hawassa">Hawassa</option>
+                                    <option value="jimma">Jimma</option>
+                                    <option value="dire-dawa">Dire Dawa</option>
+                                    <option value="adama">Adama</option>
+                                    <option value="shashemene">Shashemene</option>
+                                    <option value="local">Local Market</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="quantity" class="form-label">Quantity</label>
+                                <input type="text" class="form-control" id="quantity"
+                                    placeholder="e.g., 100 kg, 5 quintals" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Selected Role</label>
+                                <input type="text" class="form-control" id="selectedRole" readonly>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-analyze">
+                            <i class="fas fa-brain"></i> Analyze Market
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section" id="resultsSection">
+                <div class="result-card">
+                    <div class="recommendation-badge" id="recommendationBadge">
+                        <!-- Recommendation will be displayed here -->
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5><i class="fas fa-map-marker-alt"></i> Best Market</h5>
+                            <p id="bestMarket" class="lead">-</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5><i class="fas fa-chart-line"></i> Price Trend (7 days)</h5>
+                            <span id="trendIndicator" class="trend-indicator">-</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <h5><i class="fas fa-lightbulb"></i> AI Reasoning</h5>
+                        <p id="reasoning" class="text-muted">-</p>
+                    </div>
+
+                    <div class="mt-4">
+                        <h5><i class="fas fa-gauge"></i> Confidence Level</h5>
+                        <div class="d-flex align-items-center">
+                            <span id="confidenceText" class="me-3">-</span>
+                            <div class="confidence-meter flex-grow-1">
+                                <div class="confidence-fill" id="confidenceFill"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 text-center">
+                        <button class="btn btn-secondary" onclick="resetAnalysis()">
+                            <i class="fas fa-redo"></i> New Analysis
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading Section -->
+            <div class="loading" id="loadingSection" style="display: none;">
+                <div class="spinner"></div>
+                <h4>AI is analyzing market conditions...</h4>
+                <p class="text-muted">This may take a few seconds</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let selectedRole = '';
+
+        // Role selection
+        document.querySelectorAll('.role-card').forEach(card => {
+            card.addEventListener('click', function () {
+                document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedRole = this.dataset.role;
+                document.getElementById('selectedRole').value = selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1);
+
+                // Show form after role selection
+                setTimeout(() => {
+                    document.getElementById('roleSelection').style.display = 'none';
+                    document.getElementById('marketForm').style.display = 'block';
+                }, 300);
+            });
+        });
+
+        // Form submission
+        document.getElementById('analysisForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const formData = {
+                role: selectedRole,
+                product: document.getElementById('product').value,
+                market: document.getElementById('market').value,
+                quantity: document.getElementById('quantity').value
+            };
+
+            // Show loading
+            document.getElementById('marketForm').style.display = 'none';
+            document.getElementById('loadingSection').style.display = 'block';
+
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    displayResults(result);
+                } else {
+                    throw new Error(result.error || 'Analysis failed');
+                }
+            } catch (error) {
+                document.getElementById('loadingSection').style.display = 'none';
+                document.getElementById('marketForm').style.display = 'block';
+                showError(error.message);
+            }
+        });
+
+        function displayResults(result) {
+            document.getElementById('loadingSection').style.display = 'none';
+            document.getElementById('resultsSection').style.display = 'block';
+
+            // Display recommendation
+            document.getElementById('recommendationBadge').innerHTML =
+                `<i class="fas fa-bullhorn"></i> ${result.recommendation}`;
+
+            // Display best market
+            document.getElementById('bestMarket').textContent = result.best_market;
+
+            // Display trend
+            const trendElement = document.getElementById('trendIndicator');
+            trendElement.textContent = result.trend;
+            trendElement.className = 'trend-indicator';
+            if (result.trend.toLowerCase().includes('rising')) {
+                trendElement.classList.add('trend-up');
+            } else if (result.trend.toLowerCase().includes('falling')) {
+                trendElement.classList.add('trend-down');
+            } else {
+                trendElement.classList.add('trend-stable');
+            }
+
+            // Display reasoning
+            document.getElementById('reasoning').textContent = result.reasoning;
+
+            // Display confidence
+            const confidenceText = document.getElementById('confidenceText');
+            const confidenceFill = document.getElementById('confidenceFill');
+            confidenceText.textContent = result.confidence;
+
+            const confidenceWidths = {
+                'High': '90%',
+                'Medium': '60%',
+                'Low': '30%'
+            };
+            confidenceFill.style.width = confidenceWidths[result.confidence] || '50%';
+        }
+
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${message}`;
+            document.getElementById('analysisForm').appendChild(errorDiv);
+
+            setTimeout(() => {
+                errorDiv.remove();
+            }, 5000);
+        }
+
+        function resetAnalysis() {
+            document.getElementById('resultsSection').style.display = 'none';
+            document.getElementById('roleSelection').style.display = 'block';
+            document.getElementById('marketForm').style.display = 'none';
+            document.getElementById('analysisForm').reset();
+            document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
+            selectedRole = '';
+        }
+    </script>
+</body>
+
+</html>
