@@ -374,7 +374,7 @@ Market X bridges the information gap in Ethiopian markets by:
 - Assisting businesses in cost management
 - Empowering consumers with price awareness
 
-*Built for the Ethiopian market ecosystem with ❤️*
+*Built for the Ethiopian market ecosystem with love*
 
 ---
 
