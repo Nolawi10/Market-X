@@ -396,6 +396,6 @@ Market X bridges the information gap in Ethiopian markets by:
 
 ---
 
-**Last Updated**: January 2024
+**Last Updated**: January 2026
 **Version**: 1.0.0
 **Status**: Hackathon MVP
